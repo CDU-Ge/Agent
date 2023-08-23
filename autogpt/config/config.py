@@ -5,14 +5,19 @@ import contextlib
 import os
 import re
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any
+from typing import Dict
+from typing import Optional
+from typing import Union
 
 import yaml
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from colorama import Fore
-from pydantic import Field, validator
+from pydantic import Field
+from pydantic import validator
 
-from autogpt.core.configuration.schema import Configurable, SystemSettings
+from autogpt.core.configuration.schema import Configurable
+from autogpt.core.configuration.schema import SystemSettings
 from autogpt.llm.providers.openai import OPEN_AI_CHAT_MODELS
 from autogpt.plugins.plugins_config import PluginsConfig
 
@@ -144,7 +149,7 @@ class Config(SystemSettings, arbitrary_types_allowed=True):
             p.__class__, AutoGPTPluginTemplate
         ), f"{p} does not subclass AutoGPTPluginTemplate"
         assert (
-            p.__class__.__name__ != "AutoGPTPluginTemplate"
+                p.__class__.__name__ != "AutoGPTPluginTemplate"
         ), f"Plugins must subclass AutoGPTPluginTemplate; {p} is a template instance"
         return p
 
@@ -175,16 +180,16 @@ class Config(SystemSettings, arbitrary_types_allowed=True):
         fast_llm = (
             self.fast_llm
             if not (
-                self.fast_llm == self.smart_llm
-                and self.fast_llm.startswith(GPT_4_MODEL)
+                    self.fast_llm == self.smart_llm
+                    and self.fast_llm.startswith(GPT_4_MODEL)
             )
             else f"not_{self.fast_llm}"
         )
         smart_llm = (
             self.smart_llm
             if not (
-                self.smart_llm == self.fast_llm
-                and self.smart_llm.startswith(GPT_3_MODEL)
+                    self.smart_llm == self.fast_llm
+                    and self.smart_llm.startswith(GPT_3_MODEL)
             )
             else f"not_{self.smart_llm}"
         )
@@ -243,9 +248,9 @@ class ConfigBuilder(Configurable[Config]):
             "use_azure": os.getenv("USE_AZURE") == "True",
             "azure_config_file": os.getenv("AZURE_CONFIG_FILE", AZURE_CONFIG_FILE),
             "execute_local_commands": os.getenv("EXECUTE_LOCAL_COMMANDS", "False")
-            == "True",
+                                      == "True",
             "restrict_to_workspace": os.getenv("RESTRICT_TO_WORKSPACE", "True")
-            == "True",
+                                     == "True",
             "openai_functions": os.getenv("OPENAI_FUNCTIONS", "False") == "True",
             "elevenlabs_api_key": os.getenv("ELEVENLABS_API_KEY"),
             "streamelements_voice": os.getenv("STREAMELEMENTS_VOICE"),
@@ -400,6 +405,15 @@ def check_openai_api_key(config: Config) -> None:
         else:
             print("Invalid OpenAI API key!")
             exit(1)
+
+
+def invalid_openai_api_key(config: Config) -> bool:
+    if not config.openai_api_key:
+        return False
+    if not config.openai_api_key.startswith("sk-"):
+        return False
+    if not len(config.openai_api_key) == 51:
+        return False
 
 
 def _safe_split(s: Union[str, None], sep: str = ",") -> list[str]:

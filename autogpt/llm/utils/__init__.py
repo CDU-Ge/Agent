@@ -4,6 +4,7 @@ from typing import List, Literal, Optional
 
 from colorama import Fore
 
+from agent_recorder import record
 from autogpt.config import Config
 
 from ..api_manager import ApiManager
@@ -163,6 +164,13 @@ def create_chat_completion(
         messages=prompt.raw(),
         **chat_completion_kwargs,
     )
+    
+    # TODO: remove it
+    record({
+        "messages": prompt.raw(),
+        "response": response
+    })
+
     logger.debug(f"Response: {response}")
 
     if hasattr(response, "error"):

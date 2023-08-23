@@ -15,7 +15,6 @@ from autogpt.llm.utils import count_message_tokens, create_chat_completion
 from autogpt.logs import logger
 from autogpt.memory.message_history import MessageHistory
 from autogpt.prompts.prompt import DEFAULT_TRIGGERING_PROMPT
-
 CommandName = str
 CommandArgs = dict[str, str]
 AgentThoughts = dict[str, Any]

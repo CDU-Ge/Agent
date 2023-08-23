@@ -64,9 +64,10 @@ def run_auto_gpt(
     # or import it directly.
     logger.config = config
 
-    # TODO: fill in llm values here
+    # Check resource availability
     check_openai_api_key(config)
 
+    # TODO: remove it, env should be only config source
     create_config(
         config,
         continuous,
@@ -163,6 +164,7 @@ def run_auto_gpt(
     )
     logger.typewriter_log("Using Browser:", Fore.GREEN, config.selenium_web_browser)
 
+    # build agent
     agent = Agent(
         memory=memory,
         command_registry=command_registry,
